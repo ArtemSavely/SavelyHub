@@ -15,6 +15,7 @@ class UserRepository:
     def save(self, user):
         db.session.add(user)
         db.session.flush()
+        return user
 
     def delete(self, user):
         db.session.delete(user)

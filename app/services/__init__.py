@@ -1,1 +1,3 @@
 from user_service import UserService
+from repository_service import RepositoryService
+from permission_service import PermissionService

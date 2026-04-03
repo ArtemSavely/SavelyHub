@@ -3,7 +3,7 @@ from pathlib import Path
 import subprocess as sp
 
 
-class GitServer:
+class GitService:
     def __init__(self):
         self.repos_base = Path(Config.REPOS_BASE_DIR)
         self.repos_base.mkdir(exist_ok=True, parents=True)
@@ -33,3 +33,15 @@ class GitServer:
         datalen_hex = f"{datalen:04x}".encode()
         packet = datalen_hex + header + b"0000"
         return packet + stdout
+
+    def service(self, owner, repo_name, service):
+        repo_path = Path(self.repos_base, owner, f"{repo_name}.git")
+        process = sp.Popen(
+            [service, "--stateless-rpc", repo_path],
+            stdout=sp.PIPE,
+            stderr=sp.PIPE,
+        )
+        stdout, stderr = process.communicate()
+        process.wait()
+
+        return stdout

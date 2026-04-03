@@ -8,3 +8,6 @@ class RepositoryService:
 
     def create_repository(self):
         pass
+
+    def get_by_reponame(self, reponame):
+        return self.repo_repo.get_by_name(reponame)

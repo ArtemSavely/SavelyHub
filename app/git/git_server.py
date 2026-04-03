@@ -27,3 +27,9 @@ class GitServer:
         )
         stdout, stderr = process.communicate()
         process.wait()
+
+        header = f"# service={service}".encode()
+        datalen = len(header)
+        datalen_hex = f"{datalen:04x}".encode()
+        packet = datalen_hex + header + b"0000"
+        return packet + stdout

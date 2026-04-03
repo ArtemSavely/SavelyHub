@@ -12,6 +12,7 @@ class UserService:
             raise ValueError("Пользователь с этой почтой уже существует")
         if self.user_repo.get_by_username(username):
             raise ValueError("Пользователь с таким именем уже существует")
+
         user = User(email=email,
                     username=username,
                     password=generate_password_hash(password))

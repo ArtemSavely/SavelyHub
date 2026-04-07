@@ -30,5 +30,6 @@ def info_refs(owner, repo_name):
 
 @blueprint.route('/<owner>/<repo>/<service>', methods=['POST'])
 def upload(owner, repo_name, service):
-    current_user = get_current_user()
-    repo = 0
+    data = request.get_data()
+    result = GitService.service(owner, repo_name, service, data)
+    return make_response(result)

@@ -31,3 +31,6 @@ class RepositoryService:
 
     def get_by_reponame(self, reponame):
         return self.repo_repo.get_by_name(reponame)
+
+    def get_repos_list_for_user(self, user):
+        return self.repo_repo.get_all_for_user_id(user.id)

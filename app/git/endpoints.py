@@ -31,4 +31,4 @@ def info_refs(owner, repo_name):
 @blueprint.route('/<owner>/<repo>/<service>', methods=['POST'])
 def upload(owner, repo_name, service):
     current_user = get_current_user()
-    repo =
+    repo = 0

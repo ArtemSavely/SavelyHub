@@ -3,7 +3,7 @@ from app.models import Permission
 
 
 class PermissionRepository:
-    def get_by_user_and_repository(self, user_id, repository_id):
+    def get_by_user_and_repository(self, user_id: int, repository_id: int):
         return (db.session.query(Permission).
                 filter(Permission.user_id == user_id,
                         Permission.repository_id == repository_id).first())
@@ -11,6 +11,9 @@ class PermissionRepository:
     def save(self, permission):
         db.session.add(permission)
         db.session.flush()
+
+    def commit(self):
+        db.session.commit()
 
     def delete(self, permission):
         db.session.delete(permission)

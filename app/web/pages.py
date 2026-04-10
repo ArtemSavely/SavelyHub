@@ -1,10 +1,11 @@
 from flask import Blueprint, redirect, render_template
-from flask_login import login_user
+from flask_login import login_user, logout_user
 from app.forms import LoginForm, RegisterForm
 from app.services import UserService
 
 
 blueprint = Blueprint('web', __name__)
+
 
 
 @blueprint.route('/login', methods=['GET', 'POST'])
@@ -43,3 +44,14 @@ def register():
                                    )
         return redirect("/")
     return render_template('register.html', title='Регистрация', form=form)
+
+
+@blueprint.route('/logout')
+def logout():
+    logout_user()
+    return redirect("/")
+
+
+@blueprint.route('/')
+def index():
+    return render_template('index.html')

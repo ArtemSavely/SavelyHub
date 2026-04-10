@@ -4,14 +4,19 @@ from app.config import Config
 from app.extensions import login_manager, db
 from app.web import blueprint as web_blueprint
 from app.git import blueprint as git_blueprint
+from app.models import User
 
 
 def create_app():
-    app = Flask(__name__)
+    app = Flask(__name__, template_folder='web/templates')
     app.config.from_object(Config)
 
     db.init_app(app)
     login_manager.init_app(app)
+
+    @login_manager.user_loader
+    def load_user(user_id):
+        return User.get(user_id)
 
     app.register_blueprint(web_blueprint)
     app.register_blueprint(git_blueprint)

@@ -1,8 +1,8 @@
 from enum import Enum
-from flask import make_response, blueprint, request
+from flask import make_response, Blueprint, request
 from app.utils import get_current_user
 from app.services import PermissionService
-from git_service import GitService
+from .git_service import GitService
 
 
 class Service(Enum):
@@ -10,7 +10,7 @@ class Service(Enum):
     upload = 'git-upload-pack'
 
 
-blueprint = blueprint("git", __name__)
+blueprint = Blueprint("git", __name__)
 
 
 @blueprint.route('/<owner>/<repo>/info/refs', methods=['GET'])

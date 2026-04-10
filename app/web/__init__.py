@@ -1,1 +1,1 @@
-from pages import blueprint
+from .pages import blueprint

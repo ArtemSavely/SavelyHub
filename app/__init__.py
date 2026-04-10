@@ -1,7 +1,7 @@
 from flask import Flask
 
 from app.config import Config
-from app.extensions import login_manager, db
+from app.extensions import login_manager, db, migrate
 from app.web import blueprint as web_blueprint
 from app.git import blueprint as git_blueprint
 from app.models import User
@@ -13,6 +13,7 @@ def create_app():
 
     db.init_app(app)
     login_manager.init_app(app)
+    migrate.init_app(app, db)
 
     @login_manager.user_loader
     def load_user(user_id):

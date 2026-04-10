@@ -7,7 +7,6 @@ from app.services import UserService
 blueprint = Blueprint('web', __name__)
 
 
-
 @blueprint.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()

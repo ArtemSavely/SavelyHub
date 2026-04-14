@@ -24,4 +24,13 @@ class UserService:
         user = self.user_repo.get_by_email(email)
         if user and check_password_hash(user.hashed_password, password):
             return user
-        return None
+        return
+
+    def get_user_by_name(self, username):
+        return self.user_repo.get_by_username(username)
+
+    def get_user_by_id(self, user_id):
+        return self.user_repo.get_by_id(user_id)
+
+    def get_user_by_email(self, email):
+        return self.user_repo.get_by_email(email)

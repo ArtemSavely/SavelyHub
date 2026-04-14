@@ -1,0 +1,16 @@
+body {background-color:red !important;}
+
+.repo_card {
+    border-radius: 20px;
+    border: 2px;
+    color: blue
+}
+
+.new_repo_btn {
+    background-color: blue;
+    color: white;
+    border-radius: 10px;
+    margin: 10px;
+    width: 100px;
+    height: 40px;
+}

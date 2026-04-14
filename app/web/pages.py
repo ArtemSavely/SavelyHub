@@ -1,7 +1,9 @@
+import os
+
 from flask import Blueprint, redirect, render_template
 from flask_login import login_user, logout_user
 from app.forms import LoginForm, RegisterForm
-from app.services import UserService
+from app.services import UserService, RepositoryService
 
 
 blueprint = Blueprint('web', __name__)
@@ -15,7 +17,7 @@ def login():
         user = user_service.authenticate(email=form.email.data, password=form.password.data)
         if user:
             login_user(user, remember=form.remember_me.data)
-            return redirect("/")
+            return redirect(f"/{user.username}")
         return render_template('login.html',
                                message="Неправильный логин или пароль",
                                form=form)
@@ -54,3 +56,15 @@ def logout():
 @blueprint.route('/')
 def index():
     return render_template('index.html')
+
+
+@blueprint.route('/<username>')
+def user_repos(username):
+    print(os.listdir())
+    # repo_service = RepositoryService()
+    # user_service = UserService()
+    # user = user_service.get_user_by_name(username)
+    # user_repos = repo_service.get_repos_list_for_user(user)
+    # return render_template("user_repos.html", repos=user_repos)
+    return render_template("user_repos.html")
+

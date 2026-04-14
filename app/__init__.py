@@ -17,7 +17,7 @@ def create_app():
 
     @login_manager.user_loader
     def load_user(user_id):
-        return User.get(user_id)
+        return User.query.get(int(user_id))
 
     app.register_blueprint(web_blueprint)
     app.register_blueprint(git_blueprint)

@@ -15,7 +15,7 @@ class UserService:
 
         user = User(email=email,
                     username=username,
-                    password=generate_password_hash(password))
+                    hashed_password=generate_password_hash(password))
         user = self.user_repo.save(user)
         self.user_repo.commit()
         return user

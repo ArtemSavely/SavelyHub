@@ -3,5 +3,5 @@ import secrets
 
 class Config:
     SECRET_KEY = secrets.token_urlsafe(32)
-    SQLALCHEMY_DATABASE_URI = "sqlite:///db/app.db"
+    SQLALCHEMY_DATABASE_URI = "sqlite:///app.db"
     REPOS_BASE_DIR = "repos"

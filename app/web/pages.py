@@ -1,9 +1,8 @@
-import os
-
 from flask import Blueprint, redirect, render_template
 from flask_login import login_user, logout_user
-from app.forms import LoginForm, RegisterForm
+from app.forms import LoginForm, RegisterForm, RepositoryForm
 from app.services import UserService, RepositoryService
+from app.utils import get_current_user
 
 
 blueprint = Blueprint('web', __name__)
@@ -60,11 +59,20 @@ def index():
 
 @blueprint.route('/<username>')
 def user_repos(username):
-    print(os.listdir())
-    # repo_service = RepositoryService()
-    # user_service = UserService()
-    # user = user_service.get_user_by_name(username)
-    # user_repos = repo_service.get_repos_list_for_user(user)
-    # return render_template("user_repos.html", repos=user_repos)
-    return render_template("user_repos.html")
+    print(username)
+    user_service = UserService()
+    user = user_service.get_user_by_name(username)
+    return render_template("user_repos.html", user=user)
 
+@blueprint.route('/new')
+def create_repository():
+    form = RepositoryForm()
+    repo_service = RepositoryService()
+    user = get_current_user()
+    if form.validate_on_submit():
+        # try:
+        #     repo = repo_service.create_repository(
+        #
+        #     )
+        pass
+    return render_template('repository_form.html', form=form)

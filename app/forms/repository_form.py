@@ -8,3 +8,4 @@ class RepositoryForm(FlaskForm):
     about = TextAreaField('Описание')
     visibility = SelectField('Видимость репозитория',
                              choices=[('public', 'Публичный'), ('private', 'Приватный')])
+    submit = SubmitField('Создать')

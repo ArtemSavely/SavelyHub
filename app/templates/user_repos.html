@@ -2,10 +2,10 @@
 
 {% block content %}
 <h2 id="log">Repos</h2>
-<a>
+<a href="{{ url_for('web.create_repository') }}">
     <button class="new_repo_btn">Create New</button>
 </a>
-{% for repo in repos%}
+{% for repo in user.repositories%}
 <div>
     <h2>{{ repo.name }}</h2>
 </div>

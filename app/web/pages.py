@@ -22,6 +22,7 @@ def login():
                                form=form)
     return render_template('login.html', title='Авторизация', form=form)
 
+
 @blueprint.route('/register', methods=['GET', 'POST'])
 def register():
     form = RegisterForm()
@@ -63,6 +64,7 @@ def user_repos(username):
     user_service = UserService()
     user = user_service.get_user_by_name(username)
     return render_template("user_repos.html", user=user)
+
 
 @blueprint.route('/new', methods=['GET', 'POST'])
 @login_required

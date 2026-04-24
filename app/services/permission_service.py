@@ -1,5 +1,6 @@
 from app.models import Permission
 from app.repository import PermissionRepository
+from app.repository import RepositoryRepository
 
 
 class PermissionService:
@@ -18,7 +19,14 @@ class PermissionService:
         return self.permission_repo.get_by_user_and_repository(user_id, repo_id)
 
     def check_permission(self, user_id, repo_id, role):
-        permission = self.permission_repo.get_by_user_and_repository(user_id, repo_id)
+        repo_repo = RepositoryRepository()
+        repo = repo_repo.get_by_id(repo_id)
+        if repo.private:
+            return False
+        try:
+            permission = self.permission_repo.get_by_user_and_repository(user_id, repo_id)
+        except AttributeError:
+            return "Нет прав для клонирования репозитория"
         if permission.role == role:
             return True
         return False

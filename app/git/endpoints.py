@@ -14,10 +14,10 @@ blueprint = Blueprint("git", __name__)
 
 
 @blueprint.route('/<owner>/<repo>/info/refs', methods=['GET'])
-def info_refs(owner, repo_name):
+def info_refs(owner, repo):
     user = get_current_user()
     permission_service = PermissionService()
-    if not repo_name or not permission_service.check_permission(user, repo_name, "read"):
+    if not repo or not permission_service.check_permission(user, repo, "read"):
         return make_response("Доступ к репозиторию запрещен", 403)
 
     service_type = request.args.get("service")
@@ -25,11 +25,11 @@ def info_refs(owner, repo_name):
         return make_response("Неверный сервис", 400)
 
     git_service = GitService()
-    data = git_service.inforefs(owner, repo_name, service_type)
+    data = git_service.inforefs(owner, repo , service_type)
     return make_response(data)
 
 @blueprint.route('/<owner>/<repo>/<service>', methods=['POST'])
-def upload(owner, repo_name, service):
+def upload(owner, repo, service):
     data = request.get_data()
-    result = GitService.service(owner, repo_name, service, data)
+    result = GitService.service(owner, repo, service, data)
     return make_response(result)

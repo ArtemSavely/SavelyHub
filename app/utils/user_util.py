@@ -4,7 +4,9 @@ from flask_login import current_user
 
 
 def get_current_user():
-    current_user_email = current_user.email
-    user = db.session.query(User).filter(User.email == current_user_email).first()
+    try:
+        user = db.session.query(User).filter(User.email == current_user.email).first()
+    except Exception:
+        return "пользователь не авторизован"
     print(current_user_email)
     return user

@@ -15,7 +15,7 @@ class GitService:
         if repo_path.exists():
             raise ValueError("Репозиторий уже существует")
 
-        sp.run(["git", "init", "--bare"])
+        sp.run(["git", "init", "--bare", repo_path])
         return repo_path
 
     def inforefs(self, owner: str, repo_name: str, service: str):
@@ -40,6 +40,7 @@ class GitService:
             [service, "--stateless-rpc", repo_path],
             stdout=sp.PIPE,
             stderr=sp.PIPE,
+            cwd=repo_path
         )
         stdout, stderr = process.communicate()
         process.wait()

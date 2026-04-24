@@ -25,7 +25,7 @@ class RepositoryService:
         owner = UserRepository().get_by_id(owner_id)
 
         git_service = GitService()
-        git_service.create_bare_repo(owner=owner.name, repo_name=repo_name)
+        git_service.create_bare_repo(owner=owner.username, repo_name=repo_name)
 
         return repository
 

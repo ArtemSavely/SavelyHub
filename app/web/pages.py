@@ -1,5 +1,5 @@
 from flask import Blueprint, redirect, render_template
-from flask_login import login_user, logout_user
+from flask_login import login_user, logout_user, login_required
 from app.forms import LoginForm, RegisterForm, RepositoryForm
 from app.services import UserService, RepositoryService
 from app.utils import get_current_user
@@ -59,20 +59,29 @@ def index():
 
 @blueprint.route('/<username>')
 def user_repos(username):
-    print(username)
+    #print(username)
     user_service = UserService()
     user = user_service.get_user_by_name(username)
     return render_template("user_repos.html", user=user)
 
-@blueprint.route('/new')
+@blueprint.route('/new', methods=['GET', 'POST'])
+@login_required
 def create_repository():
     form = RepositoryForm()
     repo_service = RepositoryService()
     user = get_current_user()
     if form.validate_on_submit():
-        # try:
-        #     repo = repo_service.create_repository(
-        #
-        #     )
-        pass
-    return render_template('repository_form.html', form=form)
+        try:
+            print(user.username)
+            private = False if form.visibility.data == 'public' else True
+            repo = repo_service.create_repository(
+                owner_id=user.id,
+                repo_name=form.name.data,
+                private=private
+            )
+        except Exception as e:
+            return render_template('repository_form.html',
+                                   form=form,
+                                   message=str(e)
+                                   )
+    return render_template('user_repos.html', user=user)

@@ -4,7 +4,6 @@ from app.models import Repository
 
 class RepositoryRepository:
     def get_by_id(self, repo_id):
-        print(repo_id)
         return db.session.query(Repository).filter(Repository.id == repo_id).first()
 
     def get_by_name(self, name):

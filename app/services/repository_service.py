@@ -1,6 +1,7 @@
 from app.git.git_service import GitService
 from app.models import Repository
 from app.repository import RepositoryRepository, UserRepository
+from . import PermissionService
 
 
 class RepositoryService:
@@ -21,6 +22,14 @@ class RepositoryService:
 
         self.repo_repo.save(repository)
         self.repo_repo.commit()
+
+        permission_service = PermissionService()
+        permission = permission_service.create_permission(
+            user_id=owner_id,
+            repo_id=repository.id,
+            role="write"
+        )
+        print(permission.role)
 
         owner = UserRepository().get_by_id(owner_id)
 

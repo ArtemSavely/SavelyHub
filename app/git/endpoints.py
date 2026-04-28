@@ -17,8 +17,9 @@ blueprint = Blueprint("git", __name__)
 def info_refs(owner, repo):
     user = get_current_user()
     permission_service = PermissionService()
-    if not repo or not permission_service.check_permission(user, repo, "read"):
-        return make_response("Доступ к репозиторию запрещен", 403)
+
+    # if not repo or not permission_service.check_permission(user, repo, "read"):
+    #     return make_response("Доступ к репозиторию запрещен", 403)
 
     service_type = request.args.get("service")
     if service_type in [Service.upload, Service.receive]:
@@ -31,5 +32,6 @@ def info_refs(owner, repo):
 @blueprint.route('/<owner>/<repo>/<service>', methods=['POST'])
 def upload(owner, repo, service):
     data = request.get_data()
+    print(data)
     result = GitService.service(owner, repo, service, data)
     return make_response(result)

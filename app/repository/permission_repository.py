@@ -4,6 +4,7 @@ from app.models import Permission
 
 class PermissionRepository:
     def get_by_user_and_repository(self, user_id: int, repository_id: int):
+        print(user_id, repository_id, 'PermissionRepository.get_by_user_and_repository')
         return (db.session.query(Permission).
                 filter(Permission.user_id == user_id,
                         Permission.repository_id == repository_id).first())

@@ -81,9 +81,10 @@ def create_repository():
                 repo_name=form.name.data,
                 private=private
             )
+            return redirect(f"/{user.username}")
         except Exception as e:
             return render_template('repository_form.html',
                                    form=form,
                                    message=str(e)
                                    )
-    return render_template('user_repos.html', user=user)
+    return render_template('repository_form.html', form=form)

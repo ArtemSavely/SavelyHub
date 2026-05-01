@@ -1,48 +1,54 @@
-from app import Config
-from pathlib import Path
 import subprocess as sp
+import io
+import stat
+from typing import IO
+from subprocess import PIPE
+from pathlib import Path
+from pfluent import Runner
 
 
-class GitService:
-    def __init__(self):
-        self.repos_base = Path(Config.REPOS_BASE_DIR)
-        self.repos_base.mkdir(exist_ok=True, parents=True)
+class GitService(object):
+    def __init__(self, path: str):
+        super(GitService, self).__init__()
+        self.path = Path(path)
 
-    def create_bare_repo(self, owner: str, repo_name: str):
-        repo_path = Path(self.repos_base, owner, f"{repo_name}.git")
-        repo_path.parent.mkdir(exist_ok=True, parents=True)
+    @staticmethod
+    def init(path: str) -> GitService:
+        sp.run(["git", "init", "--bare", path])
+        return GitService(path)
 
-        if repo_path.exists():
-            raise ValueError("Репозиторий уже существует")
+    def add_hook(self, name: str, hook: str) -> str:
+        path = Path(self.path, 'hooks', name)
+        path.write_text(hook)
+        st = path.stat()
+        path.chmod(st.st_mode | stat.S_IEXEC)
+        return str(path)
 
-        sp.run(["git", "init", "--bare", repo_path])
-        return repo_path
-
-    def inforefs(self, owner: str, repo_name: str, service: str):
-        repo_path = Path(self.repos_base, owner, f"{repo_name}.git")
+    def inforefs(self, service: str) -> IO:
         process = sp.Popen(
-            [service, "--stateless-rpc", "--advertise-refs", repo_path],
+            [service, "--stateless-rpc", "--advertise-refs", self.path],
             stdout=sp.PIPE,
             stderr=sp.PIPE,
         )
         stdout, stderr = process.communicate()
         process.wait()
 
-        header = f"# service={service}".encode()
-        datalen = len(header)
-        datalen_hex = f"{datalen:04x}".encode()
-        packet = datalen_hex + header + b"0000"
-        return packet + stdout
+        data = b'# service=' + service.encode()
+        datalen = len(data) + 4
+        datalen = b'%04x' % datalen
+        data = datalen + data + b'0000' + stdout
 
-    def service(self, owner, repo_name, service):
-        repo_path = Path(self.repos_base, owner, f"{repo_name}.git")
-        process = sp.Popen(
-            [service, "--stateless-rpc", repo_path],
-            stdout=sp.PIPE,
-            stderr=sp.PIPE,
-            cwd=repo_path
-        )
-        stdout, stderr = process.communicate()
-        process.wait()
+        return io.BytesIO(data)
 
-        return stdout
+    def service(self, service: str, data: bytes) -> IO:
+        proc = Runner(service)\
+            .arg('--stateless-rpc')\
+            .arg(self.path)\
+            .popen(stdin=PIPE, stdout=PIPE)
+
+        try:
+            data, _ = proc.communicate(data)
+        finally:
+            proc.wait()
+
+        return io.BytesIO(data)

@@ -1,7 +1,10 @@
+from pathlib import Path
+
 from app.git.git_service import GitService
 from app.models import Repository
 from app.repository import RepositoryRepository, UserRepository
 from . import PermissionService
+from app import Config
 
 
 class RepositoryService:
@@ -33,8 +36,9 @@ class RepositoryService:
 
         owner = UserRepository().get_by_id(owner_id)
 
-        git_service = GitService()
-        git_service.create_bare_repo(owner=owner.username, repo_name=repo_name)
+        path = Path(Config.REPOS_BASE_DIR, owner.username, f'{repo_name}.git')
+
+        repo = GitService(path) if path.exists() else GitService.init(path)
 
         return repository
 

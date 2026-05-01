@@ -27,11 +27,9 @@ class PermissionService:
         repo = repo_repo.get_by_name(repo_name)
         if not repo.private and role == 'read':
             return True
-        try:
-            permission = self.permission_repo.get_by_user_and_repository(user_id, repo.id)
-            if permission.role == role:
-                return True
-        except AttributeError:
-            return "Вы не авторизованы для проверки прав"
+        permission = self.permission_repo.get_by_user_and_repository(user_id, repo.id)
+        print(permission.role)
+        if permission.role == role or permission.role == 'write' and role == 'read':
+            return True
         return False
 

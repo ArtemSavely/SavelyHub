@@ -1,7 +1,11 @@
 .repo_card {
     border-radius: 20px;
     border: 2px;
-    color: blue
+    color: white;
+    background-color: cornflowerblue;
+    height: 100px;
+    margin-bottom: 20px;
+    padding: 15px;
 }
 
 .new_repo_btn {
@@ -12,4 +16,21 @@
     width: 100px;
     height: 40px;
     border: 0px;
+}
+
+
+.directory_list {
+    border-radius: 20px;
+    background-color: cornflowerblue;
+    color: white;
+    margin: 10px;
+    border: 2px white;
+}
+
+.directory_object {
+    color: white;
+    padding: 10px;
+    border-top: 2px;
+    border-bottom: 2px;
+    border-color: white;
 }

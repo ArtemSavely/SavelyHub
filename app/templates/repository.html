@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2 id="log">{{ repo_name }}</h2>
+<div class="directory_list">
+    {% for object in objects %}
+    <div class="directory_object">
+        <a>
+            <p>{{ object.name }}</p>
+        </a>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

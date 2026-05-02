@@ -6,8 +6,10 @@
     <button class="new_repo_btn">Create New</button>
 </a>
 {% for repo in user.repositories%}
-<div>
-    <h2>{{ repo.name }}</h2>
+<div class="repo_card">
+    <a href="{{ url_for('web.repository', username=user.username, repo=repo.name) }}">
+        <h2>{{ repo.name }}</h2>
+    </a>
 </div>
 {% endfor %}
 

@@ -1,8 +1,11 @@
+from pathlib import Path
 from flask import Blueprint, redirect, render_template
 from flask_login import login_user, logout_user, login_required
 from app.forms import LoginForm, RegisterForm, RepositoryForm
 from app.services import UserService, RepositoryService
 from app.utils import get_current_user
+from app import Config
+import git
 
 
 blueprint = Blueprint('web', __name__)
@@ -60,7 +63,6 @@ def index():
 
 @blueprint.route('/<username>')
 def user_repos(username):
-    #print(username)
     user_service = UserService()
     user = user_service.get_user_by_name(username)
     return render_template("user_repos.html", user=user)
@@ -88,3 +90,28 @@ def create_repository():
                                    message=str(e)
                                    )
     return render_template('repository_form.html', form=form)
+
+
+@blueprint.route('/<username>/<repo>/tree', methods=['GET'])
+def repository(username, repo):
+    repo_name = repo
+    path = Path(Config.REPOS_BASE_DIR, username, f'{repo}.git')
+    repo = git.Repo(path)
+    commit = repo.head.commit
+    tree= commit.tree
+    contents = []
+    for item in tree:
+        contents.append({
+            "name": item.name,
+            "path": f"{path}/{item.name}".lstrip('/'),
+            "type": "tree" if item.type == "tree" else "blob",
+            "mode": hex(item.mode)[2:],
+            "size": item.size if item.type == "blob" else None
+        })
+    return render_template('repository.html', repo_name=repo_name, objects=contents)
+
+    # return {
+    #     "contents": contents
+    #}
+
+

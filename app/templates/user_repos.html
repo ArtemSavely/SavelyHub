@@ -7,7 +7,7 @@
 </a>
 {% for repo in user.repositories%}
 <div class="repo_card">
-    <a href="{{ url_for('web.repository', username=user.username, repo=repo.name) }}">
+    <a href="{{ url_for('web.repo_tree', username=user.username, repo_name=repo.name, filepath='') }}">
         <h2>{{ repo.name }}</h2>
     </a>
 </div>

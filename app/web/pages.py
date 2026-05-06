@@ -1,5 +1,5 @@
 from pathlib import Path
-from flask import Blueprint, redirect, render_template
+from flask import Blueprint, redirect, render_template, request, abort
 from flask_login import login_user, logout_user, login_required
 from app.forms import LoginForm, RegisterForm, RepositoryForm
 from app.services import UserService, RepositoryService
@@ -53,12 +53,16 @@ def register():
 @blueprint.route('/logout')
 def logout():
     logout_user()
-    return redirect("/")
+    return redirect("/get_started")
 
 
 @blueprint.route('/')
 def index():
     return render_template('index.html')
+
+@blueprint.route('/get_started', methods=['GET'])
+def get_started():
+    return render_template('get_started.html')
 
 
 @blueprint.route('/<username>')
@@ -92,26 +96,76 @@ def create_repository():
     return render_template('repository_form.html', form=form)
 
 
-@blueprint.route('/<username>/<repo>/tree', methods=['GET'])
-def repository(username, repo):
-    repo_name = repo
-    path = Path(Config.REPOS_BASE_DIR, username, f'{repo}.git')
-    repo = git.Repo(path)
-    commit = repo.head.commit
-    tree= commit.tree
-    contents = []
-    for item in tree:
-        contents.append({
-            "name": item.name,
-            "path": f"{path}/{item.name}".lstrip('/'),
-            "type": "tree" if item.type == "tree" else "blob",
-            "mode": hex(item.mode)[2:],
-            "size": item.size if item.type == "blob" else None
-        })
-    return render_template('repository.html', repo_name=repo_name, objects=contents)
+@blueprint.route('/<username>/<repo_name>')
+@blueprint.route('/<username>/<repo_name>/tree/')
+@blueprint.route('/<username>/<repo_name>/tree/<path:filepath>')
+def repo_tree(username, repo_name, filepath=''):
+    ref = request.args.get('ref', 'HEAD')  # Ветка или коммит
+    repo_path = Path(Config.REPOS_BASE_DIR, username, f"{repo_name}.git")
 
-    # return {
-    #     "contents": contents
-    #}
+    if not repo_path.exists():
+        abort(404, description=f"Репозиторий {repo_name} не найден")
 
+    try:
+        # Открываем репозиторий
+        git_repo = git.Repo(repo_path)
 
+        # Получаем коммит
+        try:
+            commit = git_repo.commit(ref)
+        except (git.BadName, git.BadObject):
+            abort(404, description=f"Ветка или коммит {ref} не найден")
+
+        current_tree = commit.tree
+        if filepath:
+            try:
+                for part in filepath.split('/'):
+                    if part:
+                        current_tree = current_tree / part
+            except KeyError:
+                abort(404, description=f"Путь {filepath} не найден")
+
+        try:
+            tree_items = []
+            for item in current_tree:
+                tree_items.append({
+                    "name": item.name,
+                    "type": "tree" if item.type == "tree" else "blob",
+                    "size": item.size if item.type == "blob" else None,
+                    "path": f"{filepath}/{item.name}".lstrip('/') if filepath else item.name
+                })
+            return render_template('repo_tree.html',
+                                   username=username,
+                                   repo_name=repo_name,
+                                   current_path=filepath,
+                                   ref=ref,
+                                   items=tree_items,
+                                   is_file=False)
+
+        except (TypeError, IndexError, KeyError):
+            blob = current_tree
+            if blob.type != "blob":
+                abort(404, description="Не файл и не папка")
+
+            file_ext = blob.name.split('.')[-1].lower() if '.' in blob.name else ''
+
+            content = ""
+            is_binary = False
+            try:
+                content = blob.data_stream.read().decode('utf-8')
+            except (UnicodeDecodeError, UnicodeError):
+                is_binary = True
+                content = "Бинарный файл (не может быть отображен)"
+
+            return render_template('repo_tree.html',
+                                   username=username,
+                                   repo_name=repo_name,
+                                   current_path=filepath,
+                                   ref=ref,
+                                   filename=blob.name,
+                                   content=content,
+                                   is_binary=is_binary,
+                                   file_ext=file_ext,
+                                   is_file=True)
+    except Exception as e:
+        abort(500, description=f"Ошибка при чтении репозитория: {str(e)}")

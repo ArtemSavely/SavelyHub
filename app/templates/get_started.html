@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SavelyHub · Git server</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #000000;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', monospace;
+            color: #e0e0e0;
+            line-height: 1.5;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .navbar {
+            width: 100%;
+            background-color: #000000;
+            border-bottom: 2px solid #2a2a2a;
+            padding: 1rem 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+        }
+
+        .logo {
+            font-size: 2.2rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            color: #ffffff;
+            margin: 0;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            width: 100%;
+        }
+
+        .hero {
+            max-width: 800px;
+            width: 100%;
+            margin-bottom: 3rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            font-weight: 700;
+            letter-spacing: -1.5px;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+            text-align: center;
+        }
+
+        .hero h1 .accent-purple {
+            color: #aa66ff;
+        }
+
+        .hero h1 .accent-red {
+            color: #ff3b00;
+        }
+
+        .hero h1 .accent-orange {
+            color: #ff8800;
+        }
+
+        .hero h1 .accent-yellow {
+            color: #ffcc00;
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            color: #aaaaaa;
+            max-width: 600px;
+            margin-bottom: 2.5rem;
+            text-align: center;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .btn {
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            border: none;
+            border-radius: 14px;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .btn-primary {
+            background: #7f25ef;
+            color: #ffffff;
+            font-size: 1.4rem;
+            padding: 1rem 2.8rem;
+            min-width: 240px;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 2rem;
+            max-width: 1000px;
+            width: 100%;
+            margin: 3rem auto 0;
+            border-top: 1px solid #2a2a2a;
+            padding-top: 3rem;
+            text-align: left;
+        }
+
+        .feature {
+            padding: 0;
+            text-align: center;
+        }
+
+        .feature h3 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            color: #ffcc00;
+        }
+
+        .feature p {
+            font-size: 0.9rem;
+            color: #888888;
+            line-height: 1.4;
+        }
+
+        .footer {
+            margin-top: 4rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #1a1a1a;
+            text-align: center;
+            font-size: 0.8rem;
+            color: #555555;
+            width: 100%;
+        }
+
+        .footer a {
+            color: #555555;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            color: #ffaa00;
+        }
+
+        @media (max-width: 700px) {
+            .container {
+                padding: 2rem 1.5rem;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero p {
+                font-size: 1rem;
+            }
+
+            .btn-primary {
+                font-size: 1.2rem;
+                padding: 0.8rem 2rem;
+                min-width: 200px;
+            }
+
+            .navbar {
+                padding: 0.8rem 20px;
+            }
+
+            .logo {
+                font-size: 1.8rem;
+            }
+
+            .features {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+<nav class="navbar">
+    <h1 class="logo">Savely<span>Hub</span></h1>
+    {% if current_user.is_authenticated %}
+    <p><a class="navbar-brand" href="/logout">{{ current_user.username }}</a></p>
+    {% else %}
+    <p>
+        <a class="btn btn-primary " href="/register">Зарегистрироваться</a>
+        <a class="btn btn-success" href="/login">Войти</a>
+    </p>
+    {% endif %}
+</nav>
+
+<div class="container">
+    <div class="hero">
+        <h1>
+            <span class="accent-purple">Используйте</span><br>
+            <span class="accent-red">Git</span><br>
+            <span class="accent-orange">удобно</span>
+            <span class="accent-yellow"></span>
+        </h1>
+        <p>Храните код облачно.<br>Работа с системой Git, просмотр файлов, права доступа.</p>
+        <div class="btn-group">
+            <a href="/login" class="btn btn-primary">Начать работу</a>
+        </div>
+    </div>
+
+    <div class="features">
+        <div class="feature">
+            <h3>clone · push · pull</h3>
+            <p>Полная поддержка Git Smart Protocol.</p>
+        </div>
+        <div class="feature">
+            <h3>веб‑интерфейс</h3>
+            <p>Просмотр дерева файлов, навигация по папкам, содержимое прямо в браузере.</p>
+        </div>
+        <div class="feature">
+            <h3>роли и приватность</h3>
+            <p>Публичные и приватные репозитории, права read/write под вашим контролем.</p>
+        </div>
+    </div>
+
+    <div class="footer">
+        <span>SavelyHub · учебный проект Яндекс Лицея</span>
+    </div>
+</div>
+</body>
+</html>

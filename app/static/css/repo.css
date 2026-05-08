@@ -1,0 +1,101 @@
+.repo-header {
+    border-bottom: 1px solid #2d5f7e;
+    padding-bottom: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.repo-nav {
+    display: flex;
+    gap: 1.5rem;
+    margin-top: 0.5rem;
+}
+
+.repo-nav a {
+    color: #7dd3fc;
+    text-decoration: none;
+}
+
+.repo-nav a:hover {
+    text-decoration: underline;
+}
+
+.breadcrumbs {
+    margin-bottom: 1.5rem;
+    color: #778faa;
+}
+
+.breadcrumbs a {
+    color: #7dd3fc;
+    text-decoration: none;
+}
+
+.tree-view {
+    background: rgba(15, 25, 35, 0.6);
+    border-radius: 12px;
+    padding: 0.5rem;
+}
+
+.tree-item {
+    min-width: 600px;
+    padding: 0.5rem 1rem;
+    border-bottom: 1px solid rgba(56, 189, 248, 0.1);
+    font-family: monospace;
+    text-align: left !important;
+}
+
+.tree-item a {
+    color: #eef2ff;
+    text-decoration: none;
+    margin-left: 0.5rem;
+}
+
+.tree-item a:hover {
+    color: #7dd3fc;
+}
+
+.file-size {
+    color: #778faa;
+    font-size: 0.8rem;
+    margin-left: 0.5rem;
+}
+
+.file-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.file-content {
+    background: #0a0f14;
+    border-radius: 12px;
+    padding: 1rem;
+    overflow-x: auto;
+}
+
+.file-content pre {
+    min-width: 600px;
+    margin: 0;
+    font-size: 0.85rem;
+    line-height: 1.4;
+}
+
+.btn-sm {
+    background: #1a3e55;
+    padding: 0.4rem 1rem;
+    border-radius: 8px;
+    color: white;
+    text-decoration: none;
+    font-size: 0.85rem;
+}
+
+.binary-notice {
+    background: rgba(255, 100, 100, 0.1);
+    border: 1px solid rgba(255, 100, 100, 0.3);
+    padding: 2rem;
+    text-align: center;
+    border-radius: 12px;
+}
+pre code {
+    text-align: left !important;
+}

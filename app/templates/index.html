@@ -1,6 +1,38 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h2 id="log">Repos</h2>
+<div class="container">
+    <div class="hero">
+        <h1>
+            <span class="accent-purple">Используйте</span><br>
+            <span class="accent-red">Git</span><br>
+            <span class="accent-orange">удобно</span>
+            <span class="accent-yellow"></span>
+        </h1>
+        <p>Храните код облачно.<br>Работа с системой Git, просмотр файлов, права доступа.</p>
+        <div class="btn-group">
+            <a href="/login" class="btn btn-primary">Начать работу</a>
+        </div>
+    </div>
+
+    <div class="features">
+        <div class="feature">
+            <h3>clone · push · pull</h3>
+            <p>Полная поддержка Git Smart Protocol.</p>
+        </div>
+        <div class="feature">
+            <h3>веб‑интерфейс</h3>
+            <p>Просмотр дерева файлов, навигация по папкам, содержимое прямо в браузере.</p>
+        </div>
+        <div class="feature">
+            <h3>роли и приватность</h3>
+            <p>Публичные и приватные репозитории, права read/write под вашим контролем.</p>
+        </div>
+    </div>
+
+    <div class="footer">
+        <span>SavelyHub · учебный проект Яндекс Лицея</span>
+    </div>
+</div>
 
 {% endblock %}

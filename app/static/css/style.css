@@ -18,10 +18,11 @@ nav {
 }
 
 .repo_card {
+    min-width: 800px;
     border-radius: 20px;
-    border: 2px;
+    border: 2px solid white;
     color: white;
-    background-color: cornflowerblue;
+    background-color: #050505;
     height: 100px;
     margin-bottom: 20px;
     padding: 15px;
@@ -53,3 +54,160 @@ nav {
     border-bottom: 2px;
     border-color: white;
 }
+* {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #000000;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', monospace;
+            color: #e0e0e0;
+            line-height: 1.5;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .navbar {
+            width: 100%;
+            background-color: #000000;
+            border-bottom: 2px solid #2a2a2a;
+            padding: 1rem 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+        }
+
+        .logo {
+            font-size: 2.2rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            color: #ffffff;
+            margin: 0;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            width: 100%;
+        }
+
+        .hero {
+            max-width: 800px;
+            width: 100%;
+            margin-bottom: 3rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            font-weight: 700;
+            letter-spacing: -1.5px;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+            text-align: center;
+        }
+
+        .hero h1 .accent-purple {
+            color: #aa66ff;
+        }
+
+        .hero h1 .accent-red {
+            color: #ff3b00;
+        }
+
+        .hero h1 .accent-orange {
+            color: #ff8800;
+        }
+
+        .hero h1 .accent-yellow {
+            color: #ffcc00;
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            color: #aaaaaa;
+            max-width: 600px;
+            margin-bottom: 2.5rem;
+            text-align: center;
+        }
+
+
+        .btn {
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            border: none;
+            border-radius: 14px;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .btn-primary {
+            background: #7f25ef;
+            color: #ffffff;
+            font-size: 1.4rem;
+            padding: 1rem 2.8rem;
+            min-width: 240px;
+        }
+
+        .feature h3 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            color: #ffcc00;
+        }
+
+        .feature p {
+            font-size: 0.9rem;
+            color: #888888;
+            line-height: 1.4;
+        }
+
+        .footer a {
+            color: #555555;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            color: #ffaa00;
+        }
+
+        @media (max-width: 700px) {
+            .container {
+                padding: 2rem 1.5rem;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero p {
+                font-size: 1rem;
+            }
+
+            .btn-primary {
+                font-size: 1.2rem;
+                padding: 0.8rem 2rem;
+                min-width: 200px;
+            }
+
+            .navbar {
+                padding: 0.8rem 20px;
+            }
+
+            .logo {
+                font-size: 1.8rem;
+            }
+        }

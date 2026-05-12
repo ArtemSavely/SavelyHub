@@ -64,3 +64,8 @@ WTForms==3.2.1
 ### Скриншоты
 ![img.png](app/static/screen1.png)
 ![img.png](app/static/screen2.png)
+
+
+### Презентация
+
+https://disk.yandex.ru/d/DOkgaKJkyDkOog

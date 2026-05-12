@@ -32,7 +32,6 @@ class RepositoryService:
             repo_id=repository.id,
             role="write"
         )
-        print(permission.role)
 
         owner = UserRepository().get_by_id(owner_id)
 

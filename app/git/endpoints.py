@@ -25,13 +25,11 @@ blueprint = Blueprint("git", __name__)
 
 @blueprint.route('/<owner>/<repo>/info/refs', methods=['GET'])
 def info_refs(owner, repo):
-    print(owner, repo, 'log inforefs')
     auth = request.authorization
     if not auth:
         return authenticate()
     user_service = UserService()
     permission_service = PermissionService()
-    print(auth.username, auth.password)
     user = user_service.get_user_by_email(auth.username)
 
     if not repo or not permission_service.check_permission(user.id, repo, "write"):
@@ -49,7 +47,6 @@ def info_refs(owner, repo):
 
 @blueprint.route('/<owner>/<repo>/<service>', methods=['POST'])
 def upload(owner, repo, service):
-    print(owner, repo, service, 'upload')
     auth = request.authorization
     if not auth:
         return authenticate()

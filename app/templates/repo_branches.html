@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="branches-container">
+    <div class="repo-header">
+        <div class="repo-title">
+            <a href="{{ url_for('web.repo_tree', username=username, repo_name=repo_name) }}" class="back-link">
+                ← {{ repo_name }}
+            </a>
+        </div>
+        <div class="repo-nav">
+            <a href="{{ url_for('web.repo_tree', username=username, repo_name=repo_name) }}" class="nav-link">📁 Файлы</a>
+            <a href="{{ url_for('web.repo_branches', username=username, repo_name=repo_name) }}" class="nav-link active">Ветки</a>
+        </div>
+    </div>
+
+    <div class="branches-list">
+        <div class="branches-header">
+            <span>Название ветки</span>
+            <span>Последний коммит</span>
+            <span>Обновлена</span>
+        </div>
+
+        {% for branch in branches %}
+        <div class="branch-item">
+            <div class="branch-name">
+                <span class="branch-icon"></span>
+                <a href="{{ url_for('web.repo_tree', username=username, repo_name=repo_name, ref=branch.name) }}">
+                    {{ branch.name }}
+                </a>
+                {% if branch.name == current_ref %}
+                    <span class="active-badge">active</span>
+                {% endif %}
+            </div>
+            <div class="branch-commit">
+                <code class="commit-hash">{{ branch.commit[:8] }}</code>
+                <span class="commit-message">{{ branch.message[:60] }}{% if branch.message|length > 60 %}...{% endif %}</span>
+            </div>
+            <div class="branch-date">
+                {{ branch.date.strftime('%Y-%m-%d %H:%M') if branch.date else '—' }}
+            </div>
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <p>Нет веток в этом репозитории</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

@@ -5,11 +5,11 @@
     <h1>{{ repo_name }}</h1>
     <div class="repo-nav">
         <a href="{{ url_for('web.repo_tree', username=username, repo_name=repo_name) }}">📁 Файлы</a>
+        <a href="{{ url_for('web.repo_branches', username=username, repo_name=repo_name) }}">Ветки</a>
     </div>
 </div>
 
 {% if not is_file %}
-    <!-- Отображаем дерево папок -->
     <div class="breadcrumbs">
         <a href="{{ url_for('web.repo_tree', username=username, repo_name=repo_name) }}">{{ repo_name }}</a>
         {% if current_path %}
@@ -44,7 +44,6 @@
     </div>
 
 {% else %}
-    <!-- Отображаем содержимое файла -->
     <div class="file-header">
         <div class="breadcrumbs">
             <a href="{{ url_for('web.repo_tree', username=username, repo_name=repo_name) }}">{{ repo_name }}</a>

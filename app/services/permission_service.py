@@ -28,7 +28,6 @@ class PermissionService:
         if not repo.private and role == 'read':
             return True
         permission = self.permission_repo.get_by_user_and_repository(user_id, repo.id)
-        print(permission.role)
         if permission.role == role or permission.role == 'write' and role == 'read':
             return True
         return False

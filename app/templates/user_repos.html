@@ -1,16 +1,45 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h2 id="log">Repos</h2>
-<a href="{{ url_for('web.create_repository') }}">
-    <button class="new_repo_btn">Create New</button>
-</a>
-{% for repo in user.repositories%}
-<div class="repo_card">
-    <a href="{{ url_for('web.repo_tree', username=user.username, repo_name=repo.name, filepath='') }}">
-        <h2>{{ repo.name }}</h2>
-    </a>
-</div>
-{% endfor %}
+<div class="repos-container">
+    <div class="repos-header">
+        <h1 class="repos-title">Репозитории</h1>
+        <a href="{{ url_for('web.create_repository') }}" class="create-btn">
+            <span class="plus-icon">+</span>
+            Создать
+        </a>
+    </div>
 
+    {% if user.repositories %}
+        <div class="repos-grid">
+            {% for repo in user.repositories %}
+            <div class="repo-card">
+                <a href="{{ url_for('web.repo_tree', username=user.username, repo_name=repo.name, filepath='') }}" class="repo-link">
+                    <div class="repo-icon">📁</div>
+                    <div class="repo-info">
+                        <h3 class="repo-name">{{ repo.name }}</h3>
+                        <div class="repo-meta">
+                            <span class="repo-visibility">
+                                {% if repo.private %}
+                                    🔒 Приватный
+                                {% else %}
+                                    🌍 Публичный
+                                {% endif %}
+                            </span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="empty-repos">
+            <div class="empty-icon">📭</div>
+            <p>У вас пока нет репозиториев</p>
+            <a href="{{ url_for('web.create_repository') }}" class="empty-create-btn">
+                Создать первый репозиторий
+            </a>
+        </div>
+    {% endif %}
+</div>
 {% endblock %}

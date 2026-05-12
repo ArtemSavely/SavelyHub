@@ -80,7 +80,6 @@ def create_repository():
     user = get_current_user()
     if form.validate_on_submit():
         try:
-            print(user.username)
             private = False if form.visibility.data == 'public' else True
             repo = repo_service.create_repository(
                 owner_id=user.id,
@@ -107,10 +106,7 @@ def repo_tree(username, repo_name, filepath=''):
         abort(404, description=f"Репозиторий {repo_name} не найден")
 
     try:
-        # Открываем репозиторий
         git_repo = git.Repo(repo_path)
-
-        # Получаем коммит
         try:
             commit = git_repo.commit(ref)
         except (git.BadName, git.BadObject):
@@ -169,3 +165,29 @@ def repo_tree(username, repo_name, filepath=''):
                                    is_file=True)
     except Exception as e:
         abort(500, description=f"Ошибка при чтении репозитория: {str(e)}")
+
+
+@blueprint.route('/<username>/<repo_name>/branches')
+def repo_branches(username, repo_name):
+    repo_path = Path(Config.REPOS_BASE_DIR, username, f"{repo_name}.git")
+    if not repo_path.exists():
+        abort(404)
+    try:
+        git_repo = git.Repo(repo_path)
+        branches = []
+        for branch in git_repo.branches:
+            branches.append({
+                "name": branch.name,
+                "commit": branch.commit.hexsha[:8],
+                "message": branch.commit.message.split('\n')[0],
+                "date": branch.commit.committed_datetime
+            })
+
+        return render_template('repo_branches.html',
+                               username=username,
+                               repo_name=repo_name,
+                               branches=branches,
+                               current_ref=git_repo.active_branch.name if git_repo.active_branch else 'master')
+
+    except Exception as e:
+        abort(500, description=str(e))

@@ -46,3 +46,9 @@ class RepositoryService:
 
     def get_repos_list_for_user(self, user):
         return self.repo_repo.get_all_for_user_id(user.id)
+
+    def search_public_repos(self, q):
+        return self.repo_repo.search_public_repos(q)
+
+    def search_private_repos(self, q, user_id):
+        return self.repo_repo.search_private_repos(q, user_id)

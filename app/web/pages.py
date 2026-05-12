@@ -1,6 +1,6 @@
 from pathlib import Path
-from flask import Blueprint, redirect, render_template, request, abort
-from flask_login import login_user, logout_user, login_required
+from flask import Blueprint, redirect, render_template, request, abort, url_for
+from flask_login import login_user, logout_user, login_required, current_user
 from app.forms import LoginForm, RegisterForm, RepositoryForm
 from app.services import UserService, RepositoryService
 from app.utils import get_current_user
@@ -191,3 +191,20 @@ def repo_branches(username, repo_name):
 
     except Exception as e:
         abort(500, description=str(e))
+
+
+@blueprint.route('/search')
+def search_repos():
+    query = request.args.get('q', '').strip()
+    if not query:
+        return redirect(url_for('web.index'))
+    repo_service = RepositoryService()
+    public_repos = repo_service.search_public_repos(query)
+    if current_user.is_authenticated:
+        private_repos = repo_service.search_private_repos(query, current_user.id)
+    else:
+        private_repos = []
+    repos = private_repos + public_repos
+    repos.sort(key=lambda repo: repo.name)
+
+    return render_template('search_results.html', query=query, repos=repos)

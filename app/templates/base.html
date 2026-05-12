@@ -22,15 +22,37 @@
 <body>
 <header>
     <nav class="navbar">
-        <h1 class="logo">SavelyHub</h1>
-        {% if current_user.is_authenticated %}
-        <p><a class="navbar-brand" href="/logout">{{ current_user.username }}</a></p>
-        {% else %}
-        <p>
-            <a class="btn btn-register" href="/register">Зарегистрироваться</a>
-            <a class="btn btn-login" href="/login">Войти</a>
-        </p>
-        {% endif %}
+        <div class="nav-left">
+            <h1 class="logo">
+                <a href="{{ url_for('web.index') }}">SavelyHub</a>
+            </h1>
+        </div>
+
+        <div class="nav-center">
+            <form class="search-form" action="{{ url_for('web.search_repos') }}" method="GET">
+                <div class="search-wrapper">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" name="q" class="search-input"
+                           placeholder="Поиск репозиториев..."
+                           value="{{ request.args.get('q', '') }}">
+                    <button type="submit" class="search-btn">Найти</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="nav-right">
+            {% if current_user.is_authenticated %}
+                <div class="user-menu">
+                    <span class="username">{{ current_user.username }}</span>
+                    <a class="logout-link" href="/logout">Выйти</a>
+                </div>
+            {% else %}
+                <div class="auth-links">
+                    <a class="btn-register" href="/register">Регистрация</a>
+                    <a class="btn-login" href="/login">Войти</a>
+                </div>
+            {% endif %}
+        </div>
     </nav>
 </header>
 <main role="main" class="container">

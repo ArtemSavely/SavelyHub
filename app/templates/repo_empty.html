@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="empty-repo-container">
+    <div class="empty-repo-content">
+        <div class="empty-repo-icon">📭</div>
+        <h1 class="empty-repo-title">{{ repo_name }}</h1>
+        <p class="empty-repo-message">
+            Этот репозиторий пуст
+        </p>
+
+        <div class="empty-repo-instructions">
+            <h3>Быстрый старт:</h3>
+
+            <div class="command-box">
+                <p>Создайте первый коммит:</p>
+                <pre><code># Клонируйте репозиторий
+git clone http://localhost:8001/{{ username }}/{{ repo_name }}.git
+cd {{ repo_name }}
+
+# Добавьте файл
+echo "# {{ repo_name }}" > README.md
+git add README.md
+git commit -m "Initial commit"
+
+# Отправьте на сервер
+git push origin master</code></pre>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

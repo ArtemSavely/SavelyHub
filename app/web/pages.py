@@ -7,7 +7,6 @@ from app.utils import get_current_user
 from app import Config
 import git
 
-
 blueprint = Blueprint('web', __name__)
 
 
@@ -38,8 +37,8 @@ def register():
                                    message="Пароли не совпадают")
         try:
             user = user_service.create_user(email=form.email.data,
-                                        username=form.username.data,
-                                        password=form.password.data)
+                                            username=form.username.data,
+                                            password=form.password.data)
         except ValueError as e:
             return render_template('register.html',
                                    title="Регистрация",
@@ -53,16 +52,12 @@ def register():
 @blueprint.route('/logout')
 def logout():
     logout_user()
-    return redirect("/get_started")
+    return redirect("/")
 
 
 @blueprint.route('/')
 def index():
     return render_template('index.html')
-
-@blueprint.route('/get_started', methods=['GET'])
-def get_started():
-    return render_template('get_started.html')
 
 
 @blueprint.route('/<username>')
@@ -109,7 +104,12 @@ def repo_tree(username, repo_name, filepath=''):
         git_repo = git.Repo(repo_path)
         try:
             commit = git_repo.commit(ref)
-        except (git.BadName, git.BadObject):
+        except (git.BadName, git.BadObject) as e:
+            if 'did not resolve to an object' in str(e):
+                return render_template('repo_empty.html',
+                                       username=username,
+                                       repo_name=repo_name,
+                                       is_empty=True)
             abort(404, description=f"Ветка или коммит {ref} не найден")
 
         current_tree = commit.tree
@@ -122,13 +122,48 @@ def repo_tree(username, repo_name, filepath=''):
                 abort(404, description=f"Путь {filepath} не найден")
 
         try:
+            sidebar_items = []
+
+            def get_last_commit(path):
+                """Получает последний коммит для указанного пути"""
+                try:
+                    # git log -1 --format="%H|%ci|%s" -- path
+                    log_output = git_repo.git.log('-1', '--format=%H|%ci|%s', '--', path)
+                    if log_output:
+                        parts = log_output.strip().split('|')
+                        return {
+                            'hash': parts[0][:8],
+                            'date': parts[1] if len(parts) > 1 else '',
+                            'message': parts[2][:50] + '...' if len(parts) > 2 and len(parts[2]) > 50 else (
+                                parts[2] if len(parts) > 2 else '')
+                        }
+                except:
+                    pass
+                return None
+
+            def walk_tree(tree, prefix='', depth=0):
+                for item in sorted(tree, key=lambda x: (x.type != 'tree', x.name.lower())):
+                    item_path = f"{prefix}/{item.name}" if prefix else item.name
+                    sidebar_items.append({
+                        'name': item.name,
+                        'path': item_path,
+                        'type': item.type,
+                        'depth': depth
+                    })
+                    if item.type == 'tree':
+                        walk_tree(item, item_path, depth + 1)
+
+            walk_tree(commit.tree)
             tree_items = []
             for item in current_tree:
+                item_path = f"{filepath}/{item.name}".lstrip('/') if filepath else item.name
+                last_commit = get_last_commit(item_path)
                 tree_items.append({
                     "name": item.name,
                     "type": "tree" if item.type == "tree" else "blob",
                     "size": item.size if item.type == "blob" else None,
-                    "path": f"{filepath}/{item.name}".lstrip('/') if filepath else item.name
+                    "path": f"{filepath}/{item.name}".lstrip('/') if filepath else item.name,
+                    "last_commit": last_commit
                 })
             return render_template('repo_tree.html',
                                    username=username,
@@ -136,6 +171,7 @@ def repo_tree(username, repo_name, filepath=''):
                                    current_path=filepath,
                                    ref=ref,
                                    items=tree_items,
+                                   sidebar_items=sidebar_items,
                                    is_file=False)
 
         except (TypeError, IndexError, KeyError):
@@ -153,10 +189,27 @@ def repo_tree(username, repo_name, filepath=''):
                 is_binary = True
                 content = "Бинарный файл (не может быть отображен)"
 
+            sidebar_items = []
+
+            def walk_tree(tree, prefix='', depth=0):
+                for item in sorted(tree, key=lambda x: (x.type != 'tree', x.name.lower())):
+                    item_path = f"{prefix}/{item.name}" if prefix else item.name
+                    sidebar_items.append({
+                        'name': item.name,
+                        'path': item_path,
+                        'type': item.type,
+                        'depth': depth
+                    })
+                    if item.type == 'tree':
+                        walk_tree(item, item_path, depth + 1)
+
+            walk_tree(commit.tree)
+
             return render_template('repo_tree.html',
                                    username=username,
                                    repo_name=repo_name,
                                    current_path=filepath,
+                                   sidebar_items=sidebar_items,
                                    ref=ref,
                                    filename=blob.name,
                                    content=content,

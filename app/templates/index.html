@@ -1,7 +1,14 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="container">
+<div class="content-wrapper">
+    <div class="flag-corner">
+        <div class="flag-stripe stripe-purple"></div>
+        <div class="flag-stripe stripe-red"></div>
+        <div class="flag-stripe stripe-orange"></div>
+        <div class="flag-stripe stripe-yellow"></div>
+    </div>
+
     <div class="hero">
         <h1>
             <span class="accent-purple">Используйте</span><br>
@@ -11,7 +18,11 @@
         </h1>
         <p>Храните код облачно.<br>Работа с системой Git, просмотр файлов, права доступа.</p>
         <div class="btn-group">
-            <a href="/login" class="btn btn-primary">Начать работу</a>
+            {% if current_user.is_authenticated %}
+                <a href="{{ url_for('web.user_repos', username=current_user.username) }}" class="btn btn-primary">Начать работу</a>
+            {% else %}
+                <a href="/login" class="btn btn-primary">Начать работу</a>
+            {% endif %}
         </div>
     </div>
 
@@ -34,5 +45,42 @@
         <span>SavelyHub · учебный проект Яндекс Лицея</span>
     </div>
 </div>
+<!--<div class="container">-->
+<!--    <div class="hero">-->
+<!--        <h1>-->
+<!--            <span class="accent-purple">Используйте</span><br>-->
+<!--            <span class="accent-red">Git</span><br>-->
+<!--            <span class="accent-orange">удобно</span>-->
+<!--            <span class="accent-yellow"></span>-->
+<!--        </h1>-->
+<!--        <p>Храните код облачно.<br>Работа с системой Git, просмотр файлов, права доступа.</p>-->
+<!--        <div class="btn-group">-->
+<!--            {% if current_user.is_authenticated %}-->
+<!--                <a href="{{ url_for('web.user_repos', username=current_user.username) }}" class="btn btn-primary">Начать работу</a>-->
+<!--            {% else %}-->
+<!--                <a href="/login" class="btn btn-primary">Начать работу</a>-->
+<!--            {% endif %}-->
+<!--        </div>-->
+<!--    </div>-->
+
+<!--    <div class="features">-->
+<!--        <div class="feature">-->
+<!--            <h3>clone · push · pull</h3>-->
+<!--            <p>Полная поддержка Git Smart Protocol.</p>-->
+<!--        </div>-->
+<!--        <div class="feature">-->
+<!--            <h3>веб‑интерфейс</h3>-->
+<!--            <p>Просмотр дерева файлов, навигация по папкам, содержимое прямо в браузере.</p>-->
+<!--        </div>-->
+<!--        <div class="feature">-->
+<!--            <h3>роли и приватность</h3>-->
+<!--            <p>Публичные и приватные репозитории, права read/write под вашим контролем.</p>-->
+<!--        </div>-->
+<!--    </div>-->
+
+<!--    <div class="footer">-->
+<!--        <span>SavelyHub · учебный проект Яндекс Лицея</span>-->
+<!--    </div>-->
+<!--</div>-->
 
 {% endblock %}

@@ -1,76 +1,169 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="repo-header">
-    <h1>{{ repo_name }}</h1>
-    <div class="repo-nav">
-        <a href="{{ url_for('web.repo_tree', username=username, repo_name=repo_name) }}">📁 Файлы</a>
-        <a href="{{ url_for('web.repo_branches', username=username, repo_name=repo_name) }}">Ветки</a>
-    </div>
-</div>
+<div class="repo-layout">
+    <div class="repo-sidebar">
+        <div class="sidebar-header">
+            <span class="sidebar-title">{{ repo_name }}</span>
+        </div>
+        <div class="sidebar-tree">
+            {% set prev_depth = 0 %}
+            {% for item in sidebar_items %}
+            <div class="sidebar-item depth-{{ item.depth }}
+                            {% if item.path == current_path %}active{% endif %}
+                            {% if item.type == 'blob' %}file{% else %}folder{% endif %}"
+                 style="padding-left: {{ item.depth * 20 + 12 }}px;">
 
-{% if not is_file %}
-    <div class="breadcrumbs">
-        <a href="{{ url_for('web.repo_tree', username=username, repo_name=repo_name) }}">{{ repo_name }}</a>
-        {% if current_path %}
+                {% if item.type == 'tree' %}
+                <span class="sidebar-icon">📁</span>
+                <a href="{{ url_for('web.repo_tree', username=username, repo_name=repo_name, filepath=item.path, ref=ref) }}"
+                   class="sidebar-link">
+                    {{ item.name }}/
+                </a>
+                {% else %}
+                <span class="sidebar-icon">📄</span>
+                <a href="{{ url_for('web.repo_tree', username=username, repo_name=repo_name, filepath=item.path, ref=ref) }}"
+                   class="sidebar-link">
+                    {{ item.name }}
+                </a>
+                {% endif %}
+            </div>
+            {% endfor %}
+
+            {% if not sidebar_items %}
+            <div class="sidebar-empty">
+                <p>Нет файлов</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="repo-main">
+        <div class="repo-header">
+            <div class="repo-title">
+                <h1>{{ repo_name }}</h1>
+                <div class="repo-nav">
+                    <a href="{{ url_for('web.repo_tree', username=username, repo_name=repo_name, ref=ref) }}"
+                       class="nav-link active">📁 Файлы</a>
+                    <a href="{{ url_for('web.repo_branches', username=username, repo_name=repo_name, ref=ref) }}"
+                       class="nav-link">⑂ Ветки</a>
+                </div>
+            </div>
+        </div>
+
+        {% if not is_file %}
+        <div class="breadcrumbs">
+            <a href="{{ url_for('web.repo_tree', username=username, repo_name=repo_name, ref=ref) }}"
+               class="breadcrumb-link">
+                {{ repo_name }}
+            </a>
+            {% if current_path %}
             {% set parts = current_path.split('/') %}
             {% set current = '' %}
             {% for part in parts %}
-                {% set current = current + '/' + part if current else part %}
-                / <a href="{{ url_for('web.repo_tree', username=username, repo_name=repo_name, filepath=current) }}">{{ part }}</a>
+            {% set current = current + '/' + part if current else part %}
+            <span class="breadcrumb-sep">/</span>
+            <a href="{{ url_for('web.repo_tree', username=username, repo_name=repo_name, filepath=current, ref=ref) }}"
+               class="breadcrumb-link">
+                {{ part }}
+            </a>
             {% endfor %}
-        {% endif %}
-    </div>
-
-    <div class="tree-view">
-        {% for item in items %}
-        <div class="tree-item">
-            {% if item.type == 'tree' %}
-                <span class="icon">📁</span>
-                <a href="{{ url_for('web.repo_tree', username=username, repo_name=repo_name, filepath=item.path) }}">
-                    {{ item.name }}/
-                </a>
-            {% else %}
-                <span class="icon">📄</span>
-                <a href="{{ url_for('web.repo_tree', username=username, repo_name=repo_name, filepath=item.path) }}">
-                    {{ item.name }}
-                </a>
-                {% if item.size %}
-                    <span class="file-size">({{ (item.size / 1024)|round(1) }} KB)</span>
-                {% endif %}
             {% endif %}
         </div>
-        {% endfor %}
-    </div>
+        <div class="tree-table">
+            <div class="tree-header">
+                <span class="tree-header-name">Имя</span>
+                <span class="tree-header-name">Последний коммит</span>
+                <span class="tree-header-size">Размер</span>
+            </div>
 
-{% else %}
-    <div class="file-header">
+            {% for item in items %}
+            <div class="tree-row">
+                <div class="tree-cell-name">
+                    {% if item.type == 'tree' %}
+                    <span class="icon">📁</span>
+                    <a href="{{ url_for('web.repo_tree', username=username, repo_name=repo_name, filepath=item.path, ref=ref) }}"
+                       class="tree-link">
+                        {{ item.name }}/
+                    </a>
+                    {% else %}
+                    <span class="icon">📄</span>
+                    <a href="{{ url_for('web.repo_tree', username=username, repo_name=repo_name, filepath=item.path, ref=ref) }}"
+                       class="tree-link">
+                        {{ item.name }}
+                    </a>
+                    {% endif %}
+                </div>
+
+                <div class="tree-cell-commit">
+                    {% if item.last_commit %}
+                    <div class="commit-info">
+                        <code class="commit-hash">{{ item.last_commit.hash }}</code>
+                        <span class="commit-message">{{ item.last_commit.message }}</span>
+                        <span class="commit-date">{{ item.last_commit.date[:10] if item.last_commit.date else '' }}</span>
+                    </div>
+                    {% else %}
+                    <span class="no-commit">—</span>
+                    {% endif %}
+                </div>
+
+                <div class="tree-cell-size">
+                    {% if item.type == 'blob' and item.size %}
+                    {{ (item.size / 1024)|round(1) }} KB
+                    {% else %}
+                    —
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+
+            {% if not items %}
+            <div class="tree-empty">
+                <p>📭 Папка пуста</p>
+            </div>
+            {% endif %}
+        </div>
+
+        {% else %}
         <div class="breadcrumbs">
-            <a href="{{ url_for('web.repo_tree', username=username, repo_name=repo_name) }}">{{ repo_name }}</a>
+            <a href="{{ url_for('web.repo_tree', username=username, repo_name=repo_name, ref=ref) }}"
+               class="breadcrumb-link">
+                {{ repo_name }}
+            </a>
             {% set parts = current_path.split('/') %}
             {% set current = '' %}
-            {% for part in parts[:-1] %}  {# Все кроме последнего (имя файла) #}
-                {% set current = current + '/' + part if current else part %}
-                / <a href="{{ url_for('web.repo_tree', username=username, repo_name=repo_name, filepath=current) }}">{{ part }}</a>
-            {% endfor %}
-            / <span class="current-file">{{ parts[-1] }}</span>
-        </div>
-
-        <div class="file-actions">
-             <a class="btn-sm">
-                💾 Скачать
+            {% for part in parts[:-1] %}
+            {% set current = current + '/' + part if current else part %}
+            <span class="breadcrumb-sep">/</span>
+            <a href="{{ url_for('web.repo_tree', username=username, repo_name=repo_name, filepath=current, ref=ref) }}"
+               class="breadcrumb-link">
+                {{ part }}
             </a>
+            {% endfor %}
+            <span class="breadcrumb-sep">/</span>
+            <span class="breadcrumb-current">{{ parts[-1] }}</span>
         </div>
-    </div>
+        <div class="file-header">
+            <div class="file-info">
+                <span class="file-icon">📄</span>
+                <span class="file-name">{{ filename }}</span>
+                {% if file_size %}
+                <span class="file-size">{{ (file_size / 1024)|round(1) }} KB</span>
+                {% endif %}
+            </div>
+        </div>
 
-    {% if is_binary %}
+        {% if is_binary %}
         <div class="binary-notice">
-            ⚠️ Этот файл является бинарным и не может быть отображен
+            <span class="binary-icon">⚠️</span>
+            <p>Этот файл является бинарным и не может быть отображен</p>
         </div>
-    {% else %}
+        {% else %}
         <div class="file-content">
             <pre><code class="language-{{ file_ext }}">{{ content }}</code></pre>
         </div>
-    {% endif %}
-{% endif %}
+        {% endif %}
+        {% endif %}
+    </div>
+</div>
 {% endblock %}

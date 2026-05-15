@@ -1,0 +1,97 @@
+.empty-repo-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 4rem 2rem;
+    text-align: center;
+}
+
+.empty-repo-icon {
+    font-size: 5rem;
+    margin-bottom: 1rem;
+    opacity: 0.7;
+}
+
+.empty-repo-title {
+    font-size: 2rem;
+    color: #ffcc00;
+    margin-bottom: 0.5rem;
+}
+
+.empty-repo-message {
+    color: #888888;
+    margin-bottom: 2rem;
+}
+
+.empty-repo-instructions {
+    background: #0a0a0f;
+    border: 1px solid #2a2a2a;
+    border-radius: 12px;
+    padding: 2rem;
+    margin: 2rem 0;
+    text-align: left;
+}
+
+.empty-repo-instructions h3 {
+    color: #ffffff;
+    margin-bottom: 1rem;
+    font-size: 1.2rem;
+}
+
+.command-box {
+    background: #111115;
+    border: 1px solid #2a2a2a;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+    overflow-x: auto;
+}
+
+.command-box pre {
+    margin: 0;
+    font-size: 0.8rem;
+    font-family: monospace;
+    color: #ffcc00;
+    white-space: pre-wrap;
+    word-break: break-all;
+}
+
+.alternative-box {
+    text-align: center;
+    padding-top: 1rem;
+    border-top: 1px solid #2a2a2a;
+}
+
+.create-file-btn {
+    display: inline-block;
+    background: #ff3b00;
+    color: white;
+    padding: 0.6rem 1.5rem;
+    border-radius: 6px;
+    text-decoration: none;
+    margin-top: 0.5rem;
+    transition: all 0.2s;
+}
+
+.create-file-btn:hover {
+    background: #ffcc00;
+    color: black;
+}
+
+.empty-repo-actions {
+    margin-top: 2rem;
+}
+
+.btn-secondary {
+    background: transparent;
+    border: 1px solid #ff3b00;
+    color: #ff3b00;
+    padding: 0.5rem 1.5rem;
+    border-radius: 6px;
+    text-decoration: none;
+    transition: all 0.2s;
+}
+
+.btn-secondary:hover {
+    background: #ff3b00;
+    color: white;
+}

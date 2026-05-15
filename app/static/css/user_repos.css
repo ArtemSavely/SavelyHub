@@ -2,7 +2,7 @@
     min-width: 100vw;
     text-align: left;
     align-items: start;
-    padding: 2rem 1rem;
+    padding: 2rem 3rem;
 }
 
 .repos-header {
@@ -40,7 +40,6 @@
 
 .create-btn:hover {
     background: #651ac1;
-    color: #000000;
 }
 
 .plus-icon {
@@ -49,6 +48,7 @@
 }
 
 .repos-grid {
+    margin-bottom: 2rem;
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: 1rem;
@@ -60,12 +60,14 @@
     border: 1px solid #2a2a2a;
     border-radius: 15px;
     transition: all 0.2s ease;
+    min-width: 600px;
     margin-left: 50px;
     margin-right: 50px;
+    text-align: start;
 }
 
 .repo-card:hover {
-    border-color: #ff3b00;
+    border-color: #ffcc00;
     transform: translateY(-1px);
     background: #0f0f15;
 }
@@ -90,9 +92,9 @@
 }
 
 .repo-name {
-    font-size: 1rem;
+    font-size: 1.2rem;
     font-weight: 600;
-    color: #ffcc00;
+    color: #b083e6;
     margin: 0 0 0.25rem 0;
     overflow: hidden;
     text-overflow: ellipsis;

@@ -5,12 +5,12 @@
     <div class="repo-header">
         <div class="repo-title">
             <a href="{{ url_for('web.repo_tree', username=username, repo_name=repo_name) }}" class="back-link">
-                ← {{ repo_name }}
+                {{ repo_name }}
             </a>
         </div>
         <div class="repo-nav">
             <a href="{{ url_for('web.repo_tree', username=username, repo_name=repo_name) }}" class="nav-link">📁 Файлы</a>
-            <a href="{{ url_for('web.repo_branches', username=username, repo_name=repo_name) }}" class="nav-link active">Ветки</a>
+            <a href="{{ url_for('web.repo_branches', username=username, repo_name=repo_name) }}" class="nav-link active">⑂ Ветки</a>
         </div>
     </div>
 

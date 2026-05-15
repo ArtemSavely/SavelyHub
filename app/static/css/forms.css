@@ -25,3 +25,10 @@
 select.form-control {
     border-radius: 12px;
 }
+
+.form-control.error,
+.form-control.is-invalid {
+    border-color: #ef4444 !important;
+    background-color: rgba(239, 68, 68, 0.05) !important;
+    box-shadow: 0 0 0 1px rgba(239, 68, 68, 0.2) !important;
+}
